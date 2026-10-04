@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_hoyasumii_linkedin_website=self.webpackChunk_hoyasumii_linkedin_website||[]).push([["3056"],{5962(e){e.exports=JSON.parse('{"name":"docusaurus-plugin-content-pages","id":"default"}')}}]);

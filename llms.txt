@@ -1,0 +1,23 @@
+# @hoyasumii/linkedin
+
+> An unofficial TypeScript SDK and MCP server to create, edit and delete your own LinkedIn posts.
+
+This file contains links to documentation sections following the llmstxt.org standard.
+
+## Table of Contents
+
+- [Getting started](https://hoyasumii.github.io/linkedin/docs/intro): An unofficial TypeScript SDK and MCP server to create, edit and delete your own LinkedIn posts, with a CLI that signs you in and registers the serv...
+- [Creating the LinkedIn app](https://hoyasumii.github.io/linkedin/docs/linkedin-app): The one-time setup: a LinkedIn developer app with the Share on LinkedIn and OpenID Connect products and a localhost redirect URL.
+- [Configuration](https://hoyasumii.github.io/linkedin/docs/mcp/configuration): Where the app settings, the sign-in and the post list are saved, and the environment variables that override them.
+- [Overview](https://hoyasumii.github.io/linkedin/docs/mcp/overview): The LinkedIn MCP server: six tools over stdio that post, edit and delete as you, and list what they posted.
+- [Programmatic use](https://hoyasumii.github.io/linkedin/docs/mcp/programmatic): Serve the LinkedIn MCP server from your own program, over stdio or any MCP transport.
+- [Setup](https://hoyasumii.github.io/linkedin/docs/mcp/setup): Sign in once and register the LinkedIn MCP server in Claude Code, Codex and OpenCode, or by hand in any client.
+- [Tools](https://hoyasumii.github.io/linkedin/docs/mcp/tools): Every tool's inputs and answers, the confirmation before deleting, and why the server can only read the posts it made.
+- [Errors](https://hoyasumii.github.io/linkedin/docs/sdk/errors): The errors the SDK throws, with LinkedIn's status and codes, and the token always masked.
+- [Media](https://hoyasumii.github.io/linkedin/docs/sdk/media): Image, video and document uploads: formats, sizes, the multi-part video upload and processing.
+- [Overview](https://hoyasumii.github.io/linkedin/docs/sdk/overview): createLinkedInClient: the token, the author, the API version and the options every call takes.
+- [Posts](https://hoyasumii.github.io/linkedin/docs/sdk/posts): Create posts with text, images, a video, a document, an article or a reshare; edit their text; delete them. The little text format, escaped for you.
+- [linkedin mcp](https://hoyasumii.github.io/linkedin/docs/cli/mcp-commands): config, status, logout, install and uninstall: every flag, and how the sign-in works.
+- [Overview](https://hoyasumii.github.io/linkedin/docs/cli/overview): The linkedin CLI: it signs you in and registers the MCP server; posting is the MCP server's job.
+- [Windows and WSL](https://hoyasumii.github.io/linkedin/docs/cli/windows): Using the CLI on Windows 10/11 from PowerShell or cmd, and registering the server in Windows clients from WSL.
+- [Contributing](https://hoyasumii.github.io/linkedin/docs/contributing): Set up the repository, run the checks and the tests, follow API changes, and build this documentation site.
