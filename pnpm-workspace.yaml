@@ -1,0 +1,11 @@
+packages:
+  - website
+
+allowBuilds:
+  # Its postinstall only falls back to a WASM build when the native binding is missing,
+  # and pnpm installs the native one for the platform (under @docusaurus/faster).
+  "@swc/core": false
+  # Its postinstall only prints a funding banner.
+  core-js: false
+  # Under orval, which bundles orval.config.ts with it; its postinstall checks the native binary.
+  esbuild: true

@@ -1,0 +1,42 @@
+{
+  "link.title.Docs": {
+    "message": "Documentação",
+    "description": "The title of the footer links column with title=Docs in the footer"
+  },
+  "link.title.Package": {
+    "message": "Pacote",
+    "description": "The title of the footer links column with title=Package in the footer"
+  },
+  "link.item.label.Getting started": {
+    "message": "Primeiros passos",
+    "description": "The label of footer link with label=Getting started linking to /docs/intro"
+  },
+  "link.item.label.SDK": {
+    "message": "SDK",
+    "description": "The label of footer link with label=SDK linking to /docs/sdk/overview"
+  },
+  "link.item.label.MCP server": {
+    "message": "Servidor MCP",
+    "description": "The label of footer link with label=MCP server linking to /docs/mcp/overview"
+  },
+  "link.item.label.CLI": {
+    "message": "CLI",
+    "description": "The label of footer link with label=CLI linking to /docs/cli/overview"
+  },
+  "link.item.label.npm": {
+    "message": "npm",
+    "description": "The label of footer link with label=npm linking to https://www.npmjs.com/package/@hoyasumii/linkedin"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/Hoyasumii/linkedin"
+  },
+  "link.item.label.Issues": {
+    "message": "Issues",
+    "description": "The label of footer link with label=Issues linking to https://github.com/Hoyasumii/linkedin/issues"
+  },
+  "copyright": {
+    "message": "Licença MIT. Um cliente independente da API do LinkedIn: sem afiliação nem endosso da LinkedIn Corporation.",
+    "description": "The footer copyright"
+  }
+}

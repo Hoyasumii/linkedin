@@ -1,0 +1,559 @@
+openapi: 3.1.0
+info:
+  title: LinkedIn member posting API (the subset @hoyasumii/linkedin uses)
+  version: "202609"
+  description: >-
+    Written for this package from LinkedIn's public documentation on Microsoft Learn (Posts, Images,
+    Videos and Documents APIs, versioned "li-lms-2026-09", and Sign In with LinkedIn using OpenID
+    Connect). It covers what a member token with `openid profile w_member_social` may call: create,
+    edit and delete the member's own posts, upload the media they carry, and identify the member.
+    Reading posts needs `r_member_social`, which LinkedIn no longer grants, so no read operation on
+    posts is described.
+
+
+    Every /rest call carries `Authorization: Bearer <token>`, `LinkedIn-Version: YYYYMM` and
+    `X-Restli-Protocol-Version: 2.0.0`; the SDK's transport adds them. URNs in a path are
+    percent-encoded (`urn%3Ali%3Ashare%3A123`).
+  license:
+    name: MIT
+servers:
+  - url: https://api.linkedin.com
+tags:
+  - name: posts
+  - name: media
+  - name: identity
+paths:
+  /v2/userinfo:
+    get:
+      operationId: getUserInfo
+      tags: [identity]
+      summary: The signed-in member (OpenID Connect userinfo)
+      description: Needs the `openid` and `profile` scopes. `sub` is the id of the member's person URN.
+      responses:
+        "200":
+          description: The member.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInfo"
+        default:
+          $ref: "#/components/responses/Error"
+
+  /rest/posts:
+    post:
+      operationId: createPost
+      tags: [posts]
+      summary: Create a post
+      description: >-
+        Publishes a post as `author`. LinkedIn answers 201 with an empty body and the post's URN in
+        the `x-restli-id` header; the SDK's transport returns it as `{ id }`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostCreate"
+      responses:
+        "201":
+          description: Created.
+          headers:
+            x-restli-id:
+              description: The new post's URN (`urn:li:share:…` or `urn:li:ugcPost:…`).
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatedEntity"
+        default:
+          $ref: "#/components/responses/Error"
+
+  /rest/posts/{postUrn}:
+    parameters:
+      - $ref: "#/components/parameters/PostUrn"
+    post:
+      operationId: updatePost
+      tags: [posts]
+      summary: Edit a post (Rest.li PARTIAL_UPDATE)
+      description: >-
+        Sent with `X-RestLi-Method: PARTIAL_UPDATE`. Only `commentary`, `contentCallToActionLabel`,
+        `contentLandingPage` and `lifecycleState` can change; the media of a post cannot.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostPatch"
+      responses:
+        "204":
+          description: Updated.
+        default:
+          $ref: "#/components/responses/Error"
+    delete:
+      operationId: deletePost
+      tags: [posts]
+      summary: Delete a post
+      description: "Sent with `X-RestLi-Method: DELETE`. Idempotent: a post already deleted answers 204 too."
+      responses:
+        "204":
+          description: Deleted.
+        default:
+          $ref: "#/components/responses/Error"
+
+  /rest/images?action=initializeUpload:
+    post:
+      operationId: initializeImageUpload
+      tags: [media]
+      summary: Register an image upload
+      description: Answers the image URN and the URL to PUT the bytes to (JPG, PNG or GIF, under 36,152,320 pixels).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InitializeUploadBody"
+      responses:
+        "200":
+          description: The upload to make.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InitializeImageUploadResponse"
+        default:
+          $ref: "#/components/responses/Error"
+
+  /rest/documents?action=initializeUpload:
+    post:
+      operationId: initializeDocumentUpload
+      tags: [media]
+      summary: Register a document upload
+      description: Answers the document URN and the URL to PUT the bytes to (PDF, PPT, PPTX, DOC or DOCX; 100 MB and 300 pages at most).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InitializeUploadBody"
+      responses:
+        "200":
+          description: The upload to make.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InitializeDocumentUploadResponse"
+        default:
+          $ref: "#/components/responses/Error"
+
+  /rest/documents/{documentUrn}:
+    parameters:
+      - name: documentUrn
+        in: path
+        required: true
+        description: The document URN, percent-encoded.
+        schema:
+          type: string
+    get:
+      operationId: getDocument
+      tags: [media]
+      summary: A document's processing status
+      responses:
+        "200":
+          description: The document.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaAsset"
+        default:
+          $ref: "#/components/responses/Error"
+
+  /rest/videos?action=initializeUpload:
+    post:
+      operationId: initializeVideoUpload
+      tags: [media]
+      summary: Register a video upload
+      description: >-
+        Answers the video URN and one upload instruction per part (4 MiB each, the last one shorter).
+        MP4, 75 KB to 500 MB for the feed, 3 seconds to 30 minutes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InitializeVideoUploadBody"
+      responses:
+        "200":
+          description: The upload to make.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InitializeVideoUploadResponse"
+        default:
+          $ref: "#/components/responses/Error"
+
+  /rest/videos?action=finalizeUpload:
+    post:
+      operationId: finalizeVideoUpload
+      tags: [media]
+      summary: Finish a video upload
+      description: Lists the ETag every part's PUT answered, in the order of the upload instructions.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinalizeVideoUploadBody"
+      responses:
+        "200":
+          description: Finalized; the video then processes until it is AVAILABLE.
+        default:
+          $ref: "#/components/responses/Error"
+
+  /rest/videos/{videoUrn}:
+    parameters:
+      - name: videoUrn
+        in: path
+        required: true
+        description: The video URN, percent-encoded.
+        schema:
+          type: string
+    get:
+      operationId: getVideo
+      tags: [media]
+      summary: A video's processing status
+      responses:
+        "200":
+          description: The video.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaAsset"
+        default:
+          $ref: "#/components/responses/Error"
+
+components:
+  parameters:
+    PostUrn:
+      name: postUrn
+      in: path
+      required: true
+      description: The post URN (`urn:li:share:…` or `urn:li:ugcPost:…`), percent-encoded.
+      schema:
+        type: string
+
+  responses:
+    Error:
+      description: A Rest.li error.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    ErrorResponse:
+      type: object
+      description: LinkedIn's error body. `serviceErrorCode` and `code` are not always present.
+      properties:
+        status:
+          type: integer
+        serviceErrorCode:
+          type: integer
+        code:
+          type: string
+        message:
+          type: string
+
+    UserInfo:
+      type: object
+      required: [sub]
+      properties:
+        sub:
+          type: string
+          description: The member id; the person URN is `urn:li:person:<sub>`.
+        name:
+          type: string
+        given_name:
+          type: string
+        family_name:
+          type: string
+        picture:
+          type: string
+        email:
+          type: string
+        email_verified:
+          type: boolean
+        locale:
+          type: object
+          properties:
+            country:
+              type: string
+            language:
+              type: string
+
+    CreatedEntity:
+      type: object
+      required: [id]
+      description: The created entity's URN, read from the `x-restli-id` header by the SDK's transport.
+      properties:
+        id:
+          type: string
+
+    Visibility:
+      type: string
+      enum: [PUBLIC, CONNECTIONS, LOGGED_IN, CONTAINER]
+      description: >-
+        Who sees the post. PUBLIC is anyone on or off LinkedIn; CONNECTIONS is 1st-degree connections
+        only (members only).
+
+    Distribution:
+      type: object
+      required: [feedDistribution]
+      properties:
+        feedDistribution:
+          type: string
+          enum: [MAIN_FEED, NONE]
+        targetEntities:
+          type: array
+          items:
+            type: object
+        thirdPartyDistributionChannels:
+          type: array
+          items:
+            type: string
+
+    MediaContent:
+      type: object
+      required: [id]
+      description: One image (`urn:li:image:…`), video (`urn:li:video:…`) or document (`urn:li:document:…`).
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+          description: Shown for a video or a document (a document's title is its file name by default).
+        altText:
+          type: string
+          maxLength: 4086
+          description: An image's alternative text, for screen readers.
+
+    MultiImageContent:
+      type: object
+      required: [images]
+      properties:
+        images:
+          type: array
+          minItems: 2
+          maxItems: 20
+          items:
+            $ref: "#/components/schemas/MediaContent"
+
+    ArticleContent:
+      type: object
+      required: [source]
+      description: A link card. LinkedIn does not scrape the page, so its title and thumbnail are set here.
+      properties:
+        source:
+          type: string
+          description: The article's URL.
+        title:
+          type: string
+        description:
+          type: string
+        thumbnail:
+          type: string
+          description: An image URN uploaded through the Images API.
+
+    PostContent:
+      type: object
+      description: At most one of these.
+      properties:
+        media:
+          $ref: "#/components/schemas/MediaContent"
+        multiImage:
+          $ref: "#/components/schemas/MultiImageContent"
+        article:
+          $ref: "#/components/schemas/ArticleContent"
+
+    ReshareContext:
+      type: object
+      required: [parent]
+      properties:
+        parent:
+          type: string
+          description: The post being reshared.
+
+    PostCreate:
+      type: object
+      required: [author, commentary, visibility, distribution, lifecycleState]
+      properties:
+        author:
+          type: string
+          description: The member's person URN (`urn:li:person:…`).
+        commentary:
+          type: string
+          maxLength: 3000
+          description: The text, in LinkedIn's "little" format (reserved characters escaped with `\`).
+        visibility:
+          $ref: "#/components/schemas/Visibility"
+        distribution:
+          $ref: "#/components/schemas/Distribution"
+        content:
+          $ref: "#/components/schemas/PostContent"
+        lifecycleState:
+          type: string
+          enum: [PUBLISHED]
+        isReshareDisabledByAuthor:
+          type: boolean
+        reshareContext:
+          $ref: "#/components/schemas/ReshareContext"
+
+    PostPatch:
+      type: object
+      required: [patch]
+      properties:
+        patch:
+          type: object
+          required: [$set]
+          properties:
+            $set:
+              type: object
+              properties:
+                commentary:
+                  type: string
+                  maxLength: 3000
+                contentCallToActionLabel:
+                  type: string
+                contentLandingPage:
+                  type: string
+
+    InitializeUploadBody:
+      type: object
+      required: [initializeUploadRequest]
+      properties:
+        initializeUploadRequest:
+          type: object
+          required: [owner]
+          properties:
+            owner:
+              type: string
+              description: The member's person URN; a member token may only upload its own media.
+
+    InitializeImageUploadResponse:
+      type: object
+      required: [value]
+      properties:
+        value:
+          type: object
+          required: [uploadUrl, image]
+          properties:
+            uploadUrl:
+              type: string
+            uploadUrlExpiresAt:
+              type: integer
+              format: int64
+            image:
+              type: string
+
+    InitializeDocumentUploadResponse:
+      type: object
+      required: [value]
+      properties:
+        value:
+          type: object
+          required: [uploadUrl, document]
+          properties:
+            uploadUrl:
+              type: string
+            uploadUrlExpiresAt:
+              type: integer
+              format: int64
+            document:
+              type: string
+
+    InitializeVideoUploadBody:
+      type: object
+      required: [initializeUploadRequest]
+      properties:
+        initializeUploadRequest:
+          type: object
+          required: [owner, fileSizeBytes]
+          properties:
+            owner:
+              type: string
+            fileSizeBytes:
+              type: integer
+              format: int64
+              minimum: 1
+            uploadCaptions:
+              type: boolean
+            uploadThumbnail:
+              type: boolean
+
+    VideoUploadInstruction:
+      type: object
+      required: [uploadUrl, firstByte, lastByte]
+      properties:
+        uploadUrl:
+          type: string
+        firstByte:
+          type: integer
+          format: int64
+          description: Inclusive.
+        lastByte:
+          type: integer
+          format: int64
+          description: Inclusive.
+
+    InitializeVideoUploadResponse:
+      type: object
+      required: [value]
+      properties:
+        value:
+          type: object
+          required: [video, uploadInstructions]
+          properties:
+            video:
+              type: string
+            uploadInstructions:
+              type: array
+              items:
+                $ref: "#/components/schemas/VideoUploadInstruction"
+            uploadToken:
+              type: string
+            uploadUrlsExpireAt:
+              type: integer
+              format: int64
+
+    FinalizeVideoUploadBody:
+      type: object
+      required: [finalizeUploadRequest]
+      properties:
+        finalizeUploadRequest:
+          type: object
+          required: [video, uploadToken, uploadedPartIds]
+          properties:
+            video:
+              type: string
+            uploadToken:
+              type: string
+            uploadedPartIds:
+              type: array
+              items:
+                type: string
+
+    MediaStatus:
+      type: string
+      enum: [PROCESSING, PROCESSING_FAILED, AVAILABLE, WAITING_UPLOAD]
+
+    MediaAsset:
+      type: object
+      properties:
+        id:
+          type: string
+        owner:
+          type: string
+        status:
+          $ref: "#/components/schemas/MediaStatus"
+        processingFailureReason:
+          type: string
+        downloadUrl:
+          type: string

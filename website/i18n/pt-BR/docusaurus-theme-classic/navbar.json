@@ -1,0 +1,34 @@
+{
+  "title": {
+    "message": "@hoyasumii/linkedin",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "hoyasumii",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Docs": {
+    "message": "Documentação",
+    "description": "Navbar item with label Docs"
+  },
+  "item.label.SDK": {
+    "message": "SDK",
+    "description": "Navbar item with label SDK"
+  },
+  "item.label.MCP": {
+    "message": "MCP",
+    "description": "Navbar item with label MCP"
+  },
+  "item.label.CLI": {
+    "message": "CLI",
+    "description": "Navbar item with label CLI"
+  },
+  "item.label.API Reference": {
+    "message": "Referência da API",
+    "description": "Navbar item with label API Reference"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

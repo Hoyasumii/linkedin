@@ -1,0 +1,65 @@
+{
+  "home.title": {
+    "message": "Servidor MCP e SDK do LinkedIn"
+  },
+  "home.tagline": {
+    "message": "Um servidor MCP e um SDK TypeScript não oficiais para criar, editar e remover seus próprios posts no LinkedIn, pela API oficial e com um app seu."
+  },
+  "home.getStarted": {
+    "message": "Começar"
+  },
+  "home.sdk.description": {
+    "message": "Um cliente tipado para a Posts API do LinkedIn, gerado pelo orval a partir de uma spec OpenAPI: uploads, vídeos em partes e o formato de texto little cuidados para você."
+  },
+  "home.mcp.description": {
+    "message": "Deixe o Claude Code, o Codex, o OpenCode ou qualquer cliente MCP postar por você: texto, imagens, um vídeo, um documento ou um link. Depois, edite o texto ou remova o post."
+  },
+  "home.cli.description": {
+    "message": "Faça login no LinkedIn por uma página web local e registre o servidor MCP nos seus clientes de IA de uma vez."
+  },
+  "home.mcp.title": {
+    "message": "Servidor MCP"
+  },
+  "home.badge": {
+    "message": "TypeScript · LinkedIn · MCP · SDK"
+  },
+  "home.headline": {
+    "message": "Seus posts no LinkedIn, pelo seu agente de IA"
+  },
+  "home.install.copy": {
+    "message": "Copiar"
+  },
+  "home.install.copied": {
+    "message": "Copiado"
+  },
+  "theme.SearchBar.label": {
+    "message": "Buscar"
+  },
+  "theme.SearchBar.seeAll": {
+    "message": "Ver todos os resultados"
+  },
+  "theme.SearchBar.noResultsText": {
+    "message": "Nenhum resultado"
+  },
+  "theme.SearchBar.searchInContext": {
+    "message": "Ver todos os resultados em \"{context}\""
+  },
+  "theme.SearchBar.seeAllOutsideContext": {
+    "message": "Ver todos os resultados fora de \"{context}\""
+  },
+  "theme.SearchPage.existingResultsTitle": {
+    "message": "Resultados da busca por \"{query}\""
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "Buscar na documentação"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "1 documento encontrado|{count} documentos encontrados"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "Nenhum documento encontrado"
+  },
+  "theme.SearchPage.searchContext.everywhere": {
+    "message": "Em todo lugar"
+  }
+}

@@ -1,0 +1,930 @@
+/*
+ * A neutral, zinc-based theme in the style of current developer-tool docs: Geist type,
+ * hairline borders, a translucent navbar and a blue (#0a66c2) kept for accents only.
+ * Everything Infima exposes is set through its variables; the selectors below only
+ * cover what it has no variable for.
+ */
+
+:root {
+  --site-bg: #ffffff;
+  --site-bg-subtle: #fafafa;
+  --site-bg-muted: #f4f4f5;
+  --site-border: #e4e4e7;
+  --site-border-strong: #d4d4d8;
+  --site-fg: #09090b;
+  --site-fg-muted: #52525b;
+  --site-fg-subtle: #71717a;
+  --site-accent: #0a66c2;
+  --site-accent-soft: rgba(10, 102, 194, 0.1);
+  --site-glow: rgba(10, 102, 194, 0.18);
+
+  --ifm-color-primary: #0a66c2;
+  --ifm-color-primary-dark: #095caf;
+  --ifm-color-primary-darker: #0957a5;
+  --ifm-color-primary-darkest: #074788;
+  --ifm-color-primary-light: #0b70d5;
+  --ifm-color-primary-lighter: #0b75df;
+  --ifm-color-primary-lightest: #1a85f3;
+
+  --ifm-background-color: var(--site-bg);
+  --ifm-background-surface-color: var(--site-bg);
+  --ifm-font-color-base: var(--site-fg);
+  --ifm-heading-color: var(--site-fg);
+  --ifm-color-content-secondary: var(--site-fg-muted);
+  --ifm-toc-border-color: var(--site-border);
+  --ifm-hr-border-color: var(--site-border);
+  --ifm-table-border-color: var(--site-border);
+  --ifm-table-stripe-background: transparent;
+
+  --ifm-font-family-base: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ifm-font-family-monospace: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --ifm-heading-font-weight: 600;
+  --ifm-line-height-base: 1.7;
+  --ifm-font-size-base: 15.5px;
+  --ifm-h1-font-size: 2.25rem;
+  --ifm-h2-font-size: 1.6rem;
+  --ifm-h3-font-size: 1.2rem;
+
+  --ifm-global-radius: 8px;
+  --ifm-code-border-radius: 6px;
+  --ifm-code-font-size: 88%;
+  --ifm-code-background: var(--site-bg-muted);
+  --ifm-code-padding-horizontal: 0.35rem;
+  --ifm-pre-background: var(--site-bg-subtle);
+  --ifm-pre-padding: 1.1rem;
+
+  --ifm-navbar-height: 3.75rem;
+  --ifm-navbar-shadow: none;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.72);
+  --ifm-navbar-link-color: var(--site-fg-muted);
+  --ifm-navbar-link-hover-color: var(--site-fg);
+  --ifm-dropdown-background-color: var(--site-bg);
+
+  --ifm-menu-color: var(--site-fg-muted);
+  --ifm-menu-color-active: var(--site-fg);
+  --ifm-menu-color-background-active: var(--site-bg-muted);
+  --ifm-menu-color-background-hover: var(--site-bg-muted);
+  --ifm-menu-link-padding-vertical: 0.35rem;
+
+  --ifm-footer-background-color: var(--site-bg);
+  --ifm-footer-link-color: var(--site-fg-muted);
+  --ifm-footer-link-hover-color: var(--site-fg);
+  --ifm-footer-title-color: var(--site-fg);
+  --ifm-footer-color: var(--site-fg-subtle);
+
+  --ifm-card-background-color: var(--site-bg);
+  --ifm-alert-border-width: 1px;
+  --ifm-alert-border-left-width: 1px;
+  --ifm-alert-shadow: none;
+
+  --docusaurus-highlighted-code-line-bg: rgba(10, 102, 194, 0.1);
+  --docsearch-primary-color: var(--ifm-color-primary);
+}
+
+/* `html[...]`, not `[data-theme="dark"]`: Infima's own dark block is `html[data-theme='dark']`
+   and would otherwise win over the tokens it redefines, leaving <html> at #1b1b1d below the
+   body's first screen. */
+html[data-theme="dark"] {
+  --site-bg: #09090b;
+  --site-bg-subtle: #0f0f12;
+  --site-bg-muted: #18181b;
+  --site-border: #27272a;
+  --site-border-strong: #3f3f46;
+  --site-fg: #fafafa;
+  --site-fg-muted: #a1a1aa;
+  --site-fg-subtle: #71717a;
+  --site-accent: #70b5f9;
+  --site-accent-soft: rgba(112, 181, 249, 0.12);
+  --site-glow: rgba(55, 143, 233, 0.28);
+
+  --ifm-color-primary: #70b5f9;
+  --ifm-color-primary-dark: #51a5f8;
+  --ifm-color-primary-darker: #419cf7;
+  --ifm-color-primary-darkest: #1282f4;
+  --ifm-color-primary-light: #8fc4fa;
+  --ifm-color-primary-lighter: #9fcdfb;
+  --ifm-color-primary-lightest: #cee6fd;
+
+  --ifm-background-color: var(--site-bg);
+  --ifm-background-surface-color: var(--site-bg);
+  --ifm-color-content-secondary: var(--site-fg-muted);
+  --ifm-toc-border-color: var(--site-border);
+  --ifm-table-stripe-background: transparent;
+  --ifm-code-background: var(--site-bg-muted);
+  --ifm-navbar-background-color: rgba(9, 9, 11, 0.7);
+  --docusaurus-highlighted-code-line-bg: rgba(112, 181, 249, 0.14);
+}
+
+html,
+body {
+  background: var(--site-bg);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "cv11";
+}
+
+::selection {
+  background: var(--site-accent-soft);
+}
+
+/* ── Navbar ─────────────────────────────────────────────────────────────── */
+
+/* The blur sits on a pseudo-element: `backdrop-filter` on .navbar itself would make it the
+   containing block of the fixed mobile sidebar, clipping that menu to the navbar's height. */
+.navbar {
+  border-bottom: 1px solid var(--site-border);
+  background-color: transparent;
+}
+
+.navbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--ifm-navbar-background-color);
+  backdrop-filter: saturate(180%) blur(12px);
+  pointer-events: none;
+}
+
+.navbar__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+}
+
+.navbar__logo {
+  height: 1.75rem;
+}
+
+.navbar__logo img {
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--site-border);
+}
+
+.navbar__link {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.navbar__link--active {
+  color: var(--site-fg);
+}
+
+/* The external-link icon sits on the baseline, which lifts it above the label like a
+   superscript; this centers it on the text instead. */
+.navbar__link svg[class*="iconExternalLink_"] {
+  vertical-align: -0.15em;
+}
+
+.navbar-sidebar {
+  background: var(--site-bg);
+}
+
+.dropdown__menu {
+  border: 1px solid var(--site-border);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Sidebar and table of contents ──────────────────────────────────────── */
+
+.theme-doc-sidebar-container {
+  border-right-color: var(--site-border) !important;
+}
+
+.menu {
+  font-size: 0.9rem;
+  padding: 1rem 0.75rem !important;
+}
+
+.menu__link {
+  border-radius: 6px;
+}
+
+.menu__link--active:not(.menu__link--sublist) {
+  font-weight: 500;
+  box-shadow: inset 2px 0 0 var(--site-accent);
+}
+
+.menu__list-item-collapsible:hover,
+.menu__list-item-collapsible--active {
+  background: transparent;
+}
+
+.theme-doc-sidebar-item-category-level-1 > .menu__list-item-collapsible > .menu__link {
+  color: var(--site-fg);
+  font-weight: 600;
+}
+
+.table-of-contents {
+  font-size: 0.82rem;
+}
+
+.table-of-contents__link--active {
+  color: var(--site-fg);
+  font-weight: 500;
+}
+
+/* ── Content ────────────────────────────────────────────────────────────── */
+
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  letter-spacing: -0.02em;
+}
+
+.markdown h2 {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--site-border);
+}
+
+.markdown > h2:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.markdown a {
+  text-decoration: underline;
+  text-decoration-color: var(--site-border-strong);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s;
+}
+
+.markdown a:hover {
+  text-decoration-color: currentColor;
+}
+
+code {
+  border: 1px solid var(--site-border);
+}
+
+pre code,
+a code {
+  border: 0;
+}
+
+.theme-code-block {
+  border: 1px solid var(--site-border);
+  box-shadow: none !important;
+}
+
+.theme-code-block pre {
+  background: var(--site-bg-subtle) !important;
+}
+
+[class*="codeBlockTitle"] {
+  border-bottom: 1px solid var(--site-border) !important;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+}
+
+.markdown table {
+  display: table;
+  width: 100%;
+  font-size: 0.9rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--site-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.markdown table th {
+  background: var(--site-bg-subtle);
+  font-weight: 600;
+  text-align: left;
+}
+
+.markdown table th,
+.markdown table td {
+  border: 0;
+  border-bottom: 1px solid var(--site-border);
+}
+
+.markdown table tr:last-child td {
+  border-bottom: 0;
+}
+
+.alert {
+  border-color: var(--site-border);
+  background: var(--site-bg-subtle);
+  color: var(--site-fg);
+}
+
+.alert--info,
+.alert--secondary {
+  --ifm-alert-border-color: var(--site-border);
+}
+
+.alert--note,
+.alert--info {
+  box-shadow: inset 3px 0 0 var(--site-accent);
+}
+
+.alert--tip,
+.alert--success {
+  box-shadow: inset 3px 0 0 #22c55e;
+}
+
+.alert--warning {
+  box-shadow: inset 3px 0 0 #f59e0b;
+}
+
+.alert--danger {
+  box-shadow: inset 3px 0 0 #ef4444;
+}
+
+.pagination-nav__link {
+  border-color: var(--site-border);
+  transition: border-color 0.15s;
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--site-border-strong);
+}
+
+.breadcrumbs__link {
+  font-size: 0.8rem;
+  border-radius: 6px;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+
+.footer {
+  border-top: 1px solid var(--site-border);
+  font-size: 0.875rem;
+}
+
+.footer__title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--site-fg-subtle);
+}
+
+.footer__copyright {
+  font-size: 0.8rem;
+}
+
+/* ── Home page ──────────────────────────────────────────────────────────── */
+
+.home-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0 4.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--site-border);
+}
+
+.home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--site-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--site-border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 100%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.home-hero::after {
+  content: "";
+  position: absolute;
+  top: -12rem;
+  left: 50%;
+  width: 48rem;
+  height: 24rem;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, var(--site-glow), transparent);
+  pointer-events: none;
+}
+
+.home-hero > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.home-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--site-border);
+  border-radius: 999px;
+  background: var(--site-bg);
+  color: var(--site-fg-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.home-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--site-accent);
+  box-shadow: 0 0 0 3px var(--site-accent-soft);
+}
+
+.home-title {
+  margin: 1.5rem auto 1rem;
+  max-width: 14ch;
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+  background: linear-gradient(180deg, var(--site-fg) 30%, var(--site-fg-subtle));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.home-subtitle {
+  margin: 0 auto;
+  max-width: 40rem;
+  color: var(--site-fg-muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+}
+
+.home-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.6rem;
+  padding: 0 1.2rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    opacity 0.15s;
+}
+
+.home-button:hover {
+  text-decoration: none;
+}
+
+.home-button--primary {
+  background: var(--site-fg);
+  color: var(--site-bg);
+}
+
+.home-button--primary:hover {
+  color: var(--site-bg);
+  opacity: 0.88;
+}
+
+.home-button--ghost {
+  border-color: var(--site-border);
+  background: var(--site-bg);
+  color: var(--site-fg);
+}
+
+.home-button--ghost:hover {
+  color: var(--site-fg);
+  border-color: var(--site-border-strong);
+  background: var(--site-bg-subtle);
+}
+
+.home-install {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  padding: 0.55rem 0.6rem 0.55rem 1rem;
+  border: 1px solid var(--site-border);
+  border-radius: 8px;
+  background: var(--site-bg-subtle);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.85rem;
+  color: var(--site-fg);
+}
+
+.home-install span {
+  color: var(--site-fg-subtle);
+  user-select: none;
+}
+
+.home-install button {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--site-border);
+  border-radius: 6px;
+  background: var(--site-bg);
+  color: var(--site-fg-muted);
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.home-install button:hover {
+  color: var(--site-fg);
+  border-color: var(--site-border-strong);
+}
+
+.home-features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 4rem 0 5rem;
+}
+
+@media (max-width: 996px) {
+  .home-features {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.home-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 1px solid var(--site-border);
+  border-radius: 12px;
+  background: var(--site-bg);
+  color: inherit;
+  transition:
+    border-color 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.home-card:hover {
+  border-color: var(--site-border-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.15);
+}
+
+.home-card__label {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  color: var(--site-accent);
+}
+
+.home-card h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.4rem 0 0.5rem;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.home-card h3 a {
+  color: var(--site-fg);
+}
+
+.home-card h3 a:hover {
+  text-decoration: none;
+}
+
+.home-card h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.home-card h3::after {
+  content: "→";
+  color: var(--site-fg-subtle);
+  transition: transform 0.15s;
+}
+
+.home-card:hover h3::after {
+  transform: translateX(3px);
+  color: var(--site-fg);
+}
+
+.home-card p {
+  flex: 1;
+  color: var(--site-fg-muted);
+  font-size: 0.92rem;
+}
+
+.home-card .theme-code-block {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+/* ── Search ─────────────────────────────────────────────────────────────────
+   @easyops-cn/docusaurus-search-local renders its input straight into the navbar, with the
+   results in a dropdown under it. Here the navbar keeps a quiet trigger, and focusing it
+   (click or Ctrl/Cmd+K) lifts the whole search box into a centered dialog over a dimmed page.
+   The plugin's classes are CSS modules, so they are matched by their `name_` prefix, as
+   `codeBlockTitle` is above. Nothing here uses `transform`: it would become the containing
+   block of the fixed backdrop. */
+
+:root {
+  --search-slot-width: 13rem;
+  --search-backdrop: rgba(9, 9, 11, 0.4);
+  --search-panel-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.25), 0 0 0 1px var(--site-border);
+
+  /* The plugin's own knobs; its dark-mode rules read them too. */
+  --search-local-modal-background: transparent;
+  --search-local-modal-shadow: none;
+  --search-local-hit-background: transparent;
+  --search-local-hit-shadow: none;
+  --search-local-hit-color: var(--site-fg);
+  --search-local-hit-active-color: var(--site-fg);
+  --search-local-muted-color: var(--site-fg-subtle);
+  --search-local-highlight-color: var(--site-bg-muted);
+}
+
+html[data-theme="dark"] {
+  --search-backdrop: rgba(0, 0, 0, 0.6);
+  --search-panel-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--site-border);
+}
+
+@media (max-width: 996px) {
+  :root {
+    --search-slot-width: 9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  :root {
+    --search-slot-width: 2.25rem;
+  }
+}
+
+/* The navbar's slot keeps its size while the search box is lifted out of it, so the items
+   around it do not move. */
+[class*="navbarSearchContainer_"] {
+  box-sizing: content-box;
+  width: var(--search-slot-width);
+  height: 2.25rem;
+}
+
+.navbar__search[class*="searchBarContainer_"] {
+  margin-left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* The trigger. */
+.navbar__search .navbar__search-input {
+  width: 100%;
+  height: 2.25rem;
+  border: 1px solid var(--site-border);
+  border-radius: 8px;
+  background: var(--site-bg-subtle);
+  color: var(--site-fg);
+  font: inherit;
+  font-size: 0.875rem;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.navbar__search .navbar__search-input::placeholder {
+  color: var(--site-fg-subtle);
+}
+
+.navbar__search .navbar__search-input:hover {
+  border-color: var(--site-border-strong);
+}
+
+.navbar__search .navbar__search-input:focus {
+  outline: none;
+}
+
+.navbar__search [class*="searchIcon_"] {
+  color: var(--site-fg-subtle);
+}
+
+.navbar__search [class*="searchHint_"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.3rem;
+  border: 1px solid var(--site-border);
+  border-radius: 4px;
+  background: var(--site-bg);
+  box-shadow: none;
+  color: var(--site-fg-subtle);
+  font-family: var(--ifm-font-family-base);
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.navbar__search [class*="searchClearButton_"] {
+  color: var(--site-fg-subtle);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.navbar__search [class*="searchClearButton_"]:hover {
+  color: var(--site-fg);
+}
+
+/* autocomplete.js measures the query in a hidden <pre> next to the input; absolutely positioned,
+   a long query pushed it past a phone's viewport and gave the page a horizontal scroll. Fixed
+   boxes never widen the page, and the measurement is the same. */
+.navbar__search [class*="searchBar_"] > pre[aria-hidden="true"] {
+  position: fixed !important;
+}
+
+/* The dialog. The container becomes the panel; ::before is the backdrop and ::after the
+   panel's surface, both under the content (z-index -1, in that order). A click on the
+   backdrop blurs the input, which closes the dialog. */
+.navbar__search[class*="focused_"] {
+  position: fixed;
+  top: max(4rem, 12vh);
+  left: 0;
+  right: 0;
+  z-index: 1;
+  width: min(40rem, calc(100vw - 2rem));
+  height: auto;
+  margin: 0 auto;
+  padding: 0.75rem;
+  animation: search-dialog-in 0.14s ease-out;
+}
+
+.navbar__search[class*="focused_"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--search-backdrop);
+  backdrop-filter: blur(4px);
+  animation: search-backdrop-in 0.14s ease-out;
+}
+
+.navbar__search[class*="focused_"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 14px;
+  background: var(--site-bg);
+  box-shadow: var(--search-panel-shadow);
+}
+
+@keyframes search-dialog-in {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+  }
+}
+
+@keyframes search-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.navbar__search[class*="focused_"] [class*="searchBar_"] {
+  display: block !important;
+  width: 100%;
+}
+
+.navbar__search[class*="focused_"] .navbar__search-input {
+  width: 100%;
+  height: 3rem;
+  padding-left: 2.75rem;
+  padding-right: 4.5rem;
+  border-color: var(--site-border-strong);
+  border-radius: 999px;
+  background: var(--site-bg-subtle);
+  font-size: 1rem;
+  box-shadow: 0 0 0 3px var(--site-accent-soft);
+}
+
+.navbar__search[class*="focused_"] [class*="searchIcon_"] {
+  top: 2.25rem;
+  left: 1.75rem;
+  color: var(--site-fg-muted);
+}
+
+.navbar__search[class*="focused_"] [class*="searchBarLoadingRing_"] {
+  top: 1.75rem;
+  left: 1.5rem;
+}
+
+.navbar__search[class*="focused_"] [class*="searchHintContainer_"] {
+  top: 0.75rem;
+  right: 1.75rem;
+  height: 3rem;
+}
+
+.navbar__search[class*="focused_"] [class*="searchClearButton_"] {
+  top: 2.25rem;
+  right: 1.75rem;
+}
+
+/* Results, in the panel under the input rather than floating below the navbar. */
+html .navbar__search [class*="searchBar_"] [class*="dropdownMenu_"] {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  width: 100%;
+  max-height: min(60vh, 32rem);
+  margin-top: 0.75rem;
+  padding: 0.75rem 0 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-top: 1px solid var(--site-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html .navbar__search [class*="searchBar_"] [class*="dropdownMenu_"] [class*="suggestion_"] {
+  height: 3.5rem;
+  padding: 0 0.75rem;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--site-fg);
+}
+
+html .navbar__search [class*="searchBar_"] [class*="dropdownMenu_"] [class*="suggestion_"]:not(:last-child) {
+  margin-bottom: 2px;
+}
+
+html .navbar__search [class*="searchBar_"] [class*="dropdownMenu_"] [class*="suggestion_"][class*="cursor_"] {
+  background: var(--site-bg-muted);
+}
+
+html .navbar__search [class*="dropdownMenu_"] [class*="suggestion_"] [class*="hitIcon_"],
+html .navbar__search [class*="dropdownMenu_"] [class*="suggestion_"] [class*="hitTree_"],
+html .navbar__search [class*="dropdownMenu_"] [class*="suggestion_"] [class*="hitAction_"],
+html .navbar__search [class*="dropdownMenu_"] [class*="suggestion_"] [class*="hitPath_"] {
+  color: var(--site-fg-subtle) !important;
+}
+
+html .navbar__search [class*="dropdownMenu_"] [class*="suggestion_"] [class*="hitTitle_"] {
+  color: var(--site-fg);
+  font-size: 0.925rem;
+}
+
+html .navbar__search [class*="dropdownMenu_"] [class*="suggestion_"] [class*="hitPath_"] {
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+html .navbar__search [class*="dropdownMenu_"] [class*="suggestion_"] mark {
+  background: none;
+  color: var(--site-accent) !important;
+  text-decoration: none !important;
+}
+
+html .navbar__search [class*="dropdownMenu_"] [class*="suggestion_"][class*="cursor_"] [class*="hitIcon_"],
+html .navbar__search [class*="dropdownMenu_"] [class*="suggestion_"][class*="cursor_"] [class*="hitAction_"] {
+  color: var(--site-fg) !important;
+}
+
+.navbar__search [class*="noResults_"] {
+  padding: 2rem 0;
+  color: var(--site-fg-muted);
+  font-size: 0.9rem;
+}
+
+.navbar__search [class*="noResultsIcon_"] {
+  color: var(--site-fg-subtle);
+}
+
+.navbar__search [class*="hitFooter_"] {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 0.8rem;
+}
+
+.navbar__search [class*="hitFooter_"] a {
+  color: var(--site-fg-muted);
+  text-decoration-color: var(--site-border-strong);
+  text-underline-offset: 3px;
+}
+
+.navbar__search [class*="hitFooter_"] a:hover {
+  color: var(--site-fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar__search[class*="focused_"],
+  .navbar__search[class*="focused_"]::before {
+    animation: none;
+  }
+}

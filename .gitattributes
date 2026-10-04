@@ -1,0 +1,6 @@
+# Keep LF on every platform: oxfmt checks LF, and a CRLF shebang breaks `#!/usr/bin/env node`.
+* text=auto eol=lf
+# Files Windows itself executes keep CRLF, should any ever be committed.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.vbs text eol=crlf

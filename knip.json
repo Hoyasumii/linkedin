@@ -1,0 +1,18 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    ".": {
+      "project": ["src/**/*.ts", "tests/**/*.ts"],
+      "ignore": ["src/generated/**"],
+      "ignoreExportsUsedInFile": true,
+      "ignoreDependencies": ["ts-node"]
+    },
+    "website": {
+      "entry": ["src/remember-locale.ts"],
+      "ignoreDependencies": [
+        "@easyops-cn/docusaurus-search-local",
+        "@easyops-cn/docusaurus-theme-docusaurus-search-local"
+      ]
+    }
+  }
+}

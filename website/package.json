@@ -1,0 +1,51 @@
+{
+  "name": "@hoyasumii/linkedin-website",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "docusaurus": "docusaurus",
+    "start": "docusaurus start",
+    "build": "node scripts/build.mjs",
+    "serve": "docusaurus serve",
+    "deploy": "node scripts/build.mjs && docusaurus deploy --skip-build",
+    "clear": "docusaurus clear",
+    "write-translations": "docusaurus write-translations",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/faster": "3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
+    "@easyops-cn/docusaurus-search-local": "0.55.3",
+    "@mdx-js/react": "^3.1.1",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "3.10.2",
+    "@docusaurus/plugin-content-docs": "3.10.2",
+    "@docusaurus/tsconfig": "3.10.2",
+    "@docusaurus/types": "3.10.2",
+    "docusaurus-plugin-llms": "0.6.0",
+    "docusaurus-plugin-typedoc": "^1.4.3",
+    "typedoc": "^0.28.20",
+    "typedoc-plugin-markdown": "^4.13.1",
+    "typescript": "5.9.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0"
+  }
+}

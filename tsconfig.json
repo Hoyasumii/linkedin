@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    // No `declarationMap`/`sourceMap`. `files` publishes `dist` only, so every emitted
+    // map referenced a `../src/*.ts` that is not in the tarball: go-to-definition fell
+    // back to the `.d.ts` anyway, and 638 unusable map files were ~2 MB of install size
+    // for nothing. Publishing `src` is the other way to fix it, and is a packaging policy
+    // decision rather than a defect fix.
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    // `@modelcontextprotocol/sdk` publishes its subpaths only through `exports`, which the
+    // `node` resolver above does not read; Node resolves them at runtime, this maps the types.
+    "paths": {
+      "@modelcontextprotocol/sdk/*": ["./node_modules/@modelcontextprotocol/sdk/dist/cjs/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+}
