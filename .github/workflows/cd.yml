@@ -1,0 +1,141 @@
+# Continuous delivery for every push to main:
+# - check: the same checks as the git hooks (lint, format, types, knip, unit tests) and the build;
+# - publish: publishes package.json's version to npm when that version is not on the registry yet,
+#   then tags it and opens a GitHub release;
+# - site: builds the docs site and deploys it to the gh-pages branch when the push touches website/
+#   or src/ (the API reference is generated from src/).
+# A manual run (workflow_dispatch) always deploys the site.
+#
+# npm authenticates through Trusted Publishing (OIDC): the package's Trusted Publisher on npmjs.com must
+# name this repository and this file (cd.yml). No npm token is stored.
+name: Continuous Delivery
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuous-delivery
+  cancel-in-progress: false
+
+env:
+  HUSKY: "0"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      publish: ${{ steps.version.outputs.publish }}
+      version: ${{ steps.version.outputs.version }}
+      site: ${{ steps.site.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm check:lint
+      - run: pnpm check:format
+      - run: pnpm check:types
+      - run: pnpm check:knip
+      - run: pnpm test:unit
+      - run: pnpm build
+
+      - name: Is this version on npm yet?
+        id: version
+        run: |
+          name=$(node -p "require('./package.json').name")
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          # npm view fails with E404 for a version (or a package) that was never published.
+          if [ "$(npm view "$name@$version" version 2>/dev/null || true)" = "$version" ]; then
+            echo "$name@$version is already on npm."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "$name@$version is not on npm yet: it will be published."
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Does the push touch the site?
+        id: site
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          # A manual run, a new branch or an unknown previous commit (a force push) deploys anyway.
+          if [ "$GITHUB_EVENT_NAME" != "push" ] || [ -z "$BEFORE" ] || [ -z "${BEFORE//0/}" ] \
+            || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null \
+            || [ -n "$(git diff --name-only "$BEFORE" "$GITHUB_SHA" -- website src)" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Neither website/ nor src/ changed: the site stays as it is."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  publish:
+    needs: check
+    if: needs.check.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # the tag and the release
+      id-token: write # Trusted Publishing and provenance
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      # Trusted Publishing needs npm 11.5.1 or later, which Node 24 ships.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # prepublishOnly builds dist/; publishConfig.access is public.
+      - run: npm publish
+
+      - name: Tag and release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ needs.check.outputs.version }}
+        run: gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --generate-notes
+
+  site:
+    needs: check
+    if: needs.check.outputs.site == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # the push to gh-pages
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build and deploy to gh-pages
+        env:
+          GIT_USER: x-access-token
+          GIT_PASS: ${{ github.token }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          pnpm docs:deploy
