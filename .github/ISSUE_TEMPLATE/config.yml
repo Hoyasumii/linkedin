@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/Hoyasumii/linkedin/security/advisories/new
+    about: Report it privately, never in a public issue.
+  - name: Documentation
+    url: https://hoyasumii.github.io/linkedin/
+    about: Guides for the SDK, the MCP server and the CLI.
+  - name: A problem with LinkedIn itself
+    url: https://github.com/LinkedIn/linkedin/issues
+    about: Bugs in the LinkedIn app or its API belong upstream.

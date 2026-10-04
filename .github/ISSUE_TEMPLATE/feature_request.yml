@@ -1,0 +1,33 @@
+name: Feature request
+description: A missing operation, tool, command or option.
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - SDK
+        - MCP server
+        - CLI
+        - Docs site
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you are trying to do
+      description: The task, and what gets in the way today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like
+      description: The call, tool or command you have in mind. For a LinkedIn API the SDK does not cover, link its page on Microsoft Learn and say which permission it needs (most read permissions are closed to new apps).
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contributing
+      options:
+        - label: I would like to open a pull request for this.

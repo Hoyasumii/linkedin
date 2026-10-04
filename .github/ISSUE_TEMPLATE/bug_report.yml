@@ -1,0 +1,56 @@
+name: Bug report
+description: Something in the SDK, the MCP server or the CLI does not work as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Security problems do not go here: report them privately, as [SECURITY.md](https://github.com/Hoyasumii/linkedin/blob/main/SECURITY.md) describes.
+        Never paste an access token or a Client Secret, and check that logs and responses carry none.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - SDK (createLinkedInClient, posts and media uploads)
+        - SDK — the OpenAPI spec (a field or an answer that does not match LinkedIn)
+        - MCP server (linkedin_create_post, _edit_post, _delete_post, _list_posts, _get_post, _whoami)
+        - CLI — sign-in (linkedin mcp config, status, logout)
+        - CLI — install (linkedin mcp install, uninstall)
+        - Docs site
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead. Include the full error.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: The smallest code, command or tool call that shows it.
+      render: typescript
+    validations:
+      required: true
+  - type: input
+    id: package-version
+    attributes:
+      label: "@hoyasumii/linkedin version"
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: linkedin-version
+    attributes:
+      label: LinkedIn-Version
+      description: The API version sent (LINKEDIN_API_VERSION, or the package's default).
+      placeholder: "202609"
+  - type: input
+    id: environment
+    attributes:
+      label: Node.js version and OS
+      description: For the MCP server or the CLI, say also which client runs it (Claude Code, Codex, OpenCode) and whether through WSL.
+      placeholder: "Node 22.11, Ubuntu 24.04 on WSL2"
